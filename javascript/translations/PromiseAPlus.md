@@ -1,14 +1,10 @@
 # Promises/A+  
 
 Promise 表示异步操作的最终结果。与Promise交互的主要方式是通过其then方法，该方法注册回调已接收Promise的最终值或无法完成Promise的原因。
-This specification details the behavior of the then method, providing an interoperable base which all Promises/A+ conformant promise implementations can be depended on to provide. As such, the specification should be considered very stable. Although the Promises/A+ organization may occasionally revise this specification with minor backward-compatible changes to address newly-discovered corner cases, we will integrate large or backward-incompatible changes only after careful consideration, discussion, and testing
-
-该规范详细说明了then方法的行为，提供了一个可互操作的基础，可以依赖所有Promises / A +符合的promise实现来提供。
+该规范详细说明了then方法的行为，提供了一个可互操作的基础，可以依赖所有符合Promises/A +的promise来提供实现。
 因此，应该认为规范非常稳定。
-尽管Promises / A +组织可能偶尔会修改此规范，并采用较小的向后兼容更改来以解决新发现的极端情况，但只有经过仔细考虑，讨论和测试后，我们才会集成大型或后向不兼容的更改。
-
+尽管Promises / A +组织可能偶尔会修改此规范，并采用较小向后兼容的更改来以解决新发现的极端情况，但只有经过仔细考虑，讨论和测试后，我们才会集成大型或不兼容的更改。
 从历史上看，Promises / A +澄清了早期Promises / A提案的行为条款，将其扩展到涵盖事实上的行为并省略了未指明或有问题的部分。
-
 最后，核心Promises / A +规范没有涉及如何创建，实现或拒绝承诺，而是选择专注于提供可互操作的方法。配套规范中的未来工作可能涉及这些主题。
 
 ## 1. Terminology 术语
