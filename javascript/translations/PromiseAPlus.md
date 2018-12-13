@@ -30,7 +30,7 @@ Promise 表示异步操作的最终结果。与Promise交互的主要方式是�
   * 2.1.3.1 绝不能转变到其他的任何状态
   * 2.1.3.2 必须有一个不能改变的理由
 
-这里 的"绝不能改变" 意味着不可变的标识(即 ===),但是并不是深度的不变形。
+这里 的"绝不能改变" 意味着不可变的标识(即 ===),但并不是深度的不可变(属性)。
 
 ### 2.2 Then 方法
 
@@ -95,4 +95,4 @@ The **promise resolution procedure** 是一个将**promise**和**value**作为�
 
 ## 3.说明
 
-原文地址 :https://promisesaplus.com/#point-42
+原文地址 :https://promisesaplus.com/
