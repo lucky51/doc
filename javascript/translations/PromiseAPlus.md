@@ -30,7 +30,7 @@ Promise 表示异步操作的最终结果。与Promise交互的主要方式是�
   * 2.1.3.1 绝不能转变到其他的任何状态
   * 2.1.3.2 必须有一个不能改变的理由
 
-这里 的"绝不能改变" 意味着不可变的标识(即 ===),但并不是深度的不可变(属性)。
+这里 的"绝不能改变" 意味着不可变的标识(即 ===),但并不是深层次的不可变(属性)。
 
 ### 2.2 Then 方法
 
@@ -91,7 +91,7 @@ The **promise resolution procedure** 是一个将**promise**和**value**作为�
   * 2.3.3.4 如果 **x** 不是一个对象或方法，用**x**来完成 **promise**
 * 2.3.4 如果**x**不是一个对象或方法，用**x**来完成 **promise**
 
-如果一个 **promise** 通过在循环的thenable链中的一个thenable 来完成，[[Resolve]](promise,thenable) 的递归特性会导致[[Resolve]](promise,thenable)再次被调用，根据上面的算法，这会导致无限制的递归。因此我们鼓励(但不强制要求)promise实现时能检测无限递归，并在出现这种情况时以一个 **TypeError**来 取消(reject) **promise**
+如果一个 **promise** 通过在循环的thenable链中的一个thenable 来完成，**[[Resolve]](promise,thenable)** 的递归特性会导致[[Resolve]](promise,thenable)再次被调用，根据上面的算法，这会导致无限制的递归。因此我们鼓励(但不强制要求)**promise**实现时能检测无限递归，并在出现这种情况时以一个 **TypeError**来 取消(reject) **promise**
 
 ## 3.说明
 
