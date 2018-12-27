@@ -179,7 +179,7 @@ undefined =true; // 给其他代码挖了一个大坑! 绝对不要这么做
 (function IIFE(undefined){
     var a ;
     if(a ===undefined){
-        console.log("Undefiend is safe here);
+        console.log("Undefiend is safe here");
     }
 })()
 ```
