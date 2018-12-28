@@ -712,45 +712,44 @@ var Car = mixin(Vehicle, {
     一定要注意，只在能够提高代码可读性的前提下使用显示混入，避免使用增加代码理解难度或者让对象更加复杂的模式。
     如果使用混入时感觉越来越困难，那或许你应该停止使用它了。实际上，如果你必须使用一个复杂的库或者函数来实现这些细节，那就标志着你的方法是有问题的或者是不必要的。
 3. 寄生继承
+    显式混入模式的一种变体被称为"寄生继承"，它既是显式的又是隐式的，主要推广者是 `Douglas Crockford`。
+    下面是它的工作原理:
 
-显式混入模式的一种变体被称为"寄生继承"，它既是显式的又是隐式的，主要推广者是 `Douglas Crockford`。
-下面是它的工作原理:
-
-```js
-//传统的 JavaScript类 Vehicle
-function Vehicle(){
-    this.engines =1;
-}
-Vehicle.prototype.ignition = function(){
-    console.log("Turning on my engine");
-};
-Vehicle.prototype.drive = function(){
-    this.ignition();
-    console.log("Steering and moving forward!");
-};
-//寄生类 Car
-function Car(){
-    //首先 ，car是一个 Vehicle
-    var car = new Vehicle();
-    //接着我们队car进行定制
-    car.wheels = 4;
-    //保存到 Vehicle::drive() 的特殊引用
-    var vehDrive = car.drive;
-    //重写 Vehicle::drive()
-    car.drive = function(){
-        vehDrive.call(this);
-        console.log("Rolling on all "+ this.wheels + "wheels");
+    ```js
+    //传统的 JavaScript类 Vehicle
+    function Vehicle(){
+        this.engines =1;
     }
-    return car;
-}
-var myCar = new Car();
-myCar.drive();
-//发动引擎 ;
-//手握方向盘!
-//全速前进!
-```
+    Vehicle.prototype.ignition = function(){
+        console.log("Turning on my engine");
+    };
+    Vehicle.prototype.drive = function(){
+        this.ignition();
+        console.log("Steering and moving forward!");
+    };
+    //寄生类 Car
+    function Car(){
+        //首先 ，car是一个 Vehicle
+        var car = new Vehicle();
+        //接着我们队car进行定制
+        car.wheels = 4;
+        //保存到 Vehicle::drive() 的特殊引用
+        var vehDrive = car.drive;
+        //重写 Vehicle::drive()
+        car.drive = function(){
+            vehDrive.call(this);
+            console.log("Rolling on all "+ this.wheels + "wheels");
+        }
+        return car;
+    }
+    var myCar = new Car();
+    myCar.drive();
+    //发动引擎 ;
+    //手握方向盘!
+    //全速前进!
+    ```
 
-如你所见，首先我们赋值一份Vehicle父类(对象) 的定义，然后混入子类(对象)的定义(如果需要的话保留父类的特殊引用),然后用这个复合对象构建实例。
+    如你所见，首先我们赋值一份Vehicle父类(对象) 的定义，然后混入子类(对象)的定义(如果需要的话保留父类的特殊引用),然后用这个复合对象构建实例。
 
 ### 4.4.2 隐式混入
 
