@@ -572,7 +572,7 @@ var  it = myObject[Symbol.iterator]();
 it.next();// {value:2, done:false}
 it.next();// {value:3, done:false}
 it.next();// {value:undefined, done:true}
-//用 for...of 遍历 myObject 
+//用 for...of 遍历 myObject
 for( var v of myObject){
     console.log(v);
 }
@@ -701,18 +701,18 @@ var Car = mixin(Vehicle, {
 ```
 
 1. 在说多态
-        我们来分析一下这条语句:Vehicle.drive.call(this) 。这就是我所说的`显式多态`。还记得吗，在之前的伪代码中对应的语句是 inherited:drive().我们之为`相对多态`。
-        JavaScript (在 ES6之前)并没有相对多态机制。所以，由于Car和Vehicle中都有 drive()函数，为了指明调用对象，我们必须使用绝对(而不是相对)引用。我们通过名称显示指定Vehicle 对象并调用它的drive()函数。
-        但是如果直接执行 Vehicle.drive()，函数调用中的this会被绑定到 Vehicle 对象而不是Car对象，这并不是我们想要的。因此，我们会使用 .call(this) 来确保drive()在Car对象的上下文中执行。
-        但是在JavaScript中(由于屏蔽)使用显示伪多态会在所有需要使用(伪)多态引用的地方创建一个函数关联，这会极大地增加维护成本。此外，由于显示伪多态可以模拟多重继承，所以它会进一步增加代码的复杂度和维护难度。
+    我们来分析一下这条语句:`Vehicle.drive.call(this)` 。这就是我所说的`显式多态`。还记得吗，在之前的伪代码中对应的语句是 `inherited:drive()`.我们之为`相对多态`。
+    `JavaScript` (在 ES6之前)并没有相对多态机制。所以，由于`Car`和`Vehicle`中都有 `drive()`函数，为了指明调用对象，我们必须使用绝对(而不是相对)引用。我们通过名称显示指定Vehicle 对象并调用它的drive()函数。
+    但是如果直接执行 Vehicle.drive()，函数调用中的this会被绑定到 `Vehicle` 对象而不是Car对象，这并不是我们想要的。因此，我们会使用 .call(this) 来确保drive()在Car对象的上下文中执行。
+    但是在JavaScript中(由于屏蔽)使用显示伪多态会在所有需要使用(伪)多态引用的地方创建一个函数关联，这会极大地增加维护成本。此外，由于显示伪多态可以模拟多重继承，所以它会进一步增加代码的复杂度和维护难度。
 2. 混合复制
-    JavaScript中的函数无法(用标准、可靠的方法)真正的复制，所以你只能复制对共享函数对象的引用(函数就是对象;)。如果你修改了共享函数对象(比如ignition()) ，比如添加了一个属性，那Vehicle 和 Car都会受到影响。
+    `JavaScript`中的函数无法(用标准、可靠的方法)真正的复制，所以你只能复制对共享函数对象的引用(函数就是对象;)。如果你修改了共享函数对象(比如ignition()) ，比如添加了一个属性，那Vehicle 和 Car都会受到影响。
     `显式混入`是JavaScript中一个很棒的机制，不过它的功能也没有看起来那么的强大。虽然它可以把一个对象的属性复制到另一个对象中，但是这其实并不能带来太多的好处，无非就是少几条定义语句，而且还会带来我们刚才提到的函数对象引用问题。
     如果你向目标对象中显式混入超过一个对象，就可以部分模仿多重继承行为，但是仍没有直接的方式来处理函数和属性的同名问题。有些开发者/库提出了"晚绑定"技术和其他的一些解决方法，但是从根本上来说，使用这些"诡计"通常会(降低性能并且)得不偿失。
     一定要注意，只在能够提高代码可读性的前提下使用显示混入，避免使用增加代码理解难度或者让对象更加复杂的模式。
     如果使用混入时感觉越来越困难，那或许你应该停止使用它了。实际上，如果你必须使用一个复杂的库或者函数来实现这些细节，那就标志着你的方法是有问题的或者是不必要的。
 3. 寄生继承
-    显式混入模式的一种变体被称为"寄生继承"，它既是显式的又是隐式的，主要推广者是 `Douglas Crockford`。
+    `显式混入模式`的一种变体被称为"`寄生继承`"，它既是显式的又是隐式的，主要推广者是 `Douglas Crockford`。
     下面是它的工作原理:
 
     ```js
@@ -775,8 +775,8 @@ Another.greeting;// "Hello World"
 Another.count; //1 (count 不是共享状态)
 ```
 
-通过在构造函数调用或者方法调用中 使用 `Something.cool.call(this)`, 我们实际上 "借用"了函数 `Something.cool()`并在 Another的上下文中调用了它(通过this绑定;)。最终的结果是 `Something.cool()`中的赋值操作都会应用在Another对象上而不是Something 对象上。
-因此，我们把 Something 的行为 "混入" 到了 Another 中。
+通过在构造函数调用或者方法调用中 使用 `Something.cool.call(this)`, 我们实际上 "借用"了函数 `Something.cool()`并在 `Another`的上下文中调用了它(通过this绑定;)。最终的结果是 `Something.cool()`中的赋值操作都会应用在Another对象上而不是`Something` 对象上。
+因此，我们把 `Something` 的行为 "`混入`" 到了 Another 中。
 虽然这类技术利用了 this的重新绑定功能，但是 `Something.cool.call(this)`仍然无法变成相对(而且更灵活的)引用 ，所以使用时千万要小心，通常来说，尽量避免使用这样的结构，以保证代码的整洁和可维护性。
 
 ### 4.5 小结
@@ -788,4 +788,464 @@ Another.count; //1 (count 不是共享状态)
 JavaScript并不会(像类那样) 自动创建对象的副本。
 `混入模式`(无论显式还是隐式) 可以用来模拟类的复制行为，但是通常会产生丑陋并且脆弱的语法，比如显式伪多态(OtherObj.methodName.call(this, ...)),这会让代码更加难懂并且难以维护。
 此外，显式混入实际上无法完全模拟类的复制行为，因为对象(和函数! 别忘了函数也是对象)只能复制引用，无法复制引用的对象或者函数本身。忽视这一点会导致许多问题。
-总的来说，在JavaScript中模拟类是得不偿失的，虽然能解决当前的问题，但是可能会埋下更多的隐患。
+总的来说，在`JavaScript`中模拟`类`是得不偿失的，虽然能解决当前的问题，但是可能会埋下更多的隐患。
+
+## 第五章 原型
+
+### 5.1 [[Prototype]]
+
+JavaScript中的对象有一个特殊的`[[Prototype]]`内置属性，其实就是对于其他对象的引用。几乎所有的对象在创建时`[[Prototype]]`属性都会被赋予一个非空的值。
+对象的`[[Prototype]]`链接可以为空，虽然很少见。
+思考下面的代码:
+
+```js
+var myObject ={
+    a:2
+};
+myObject.a; //2
+```
+
+`[[Prototype]]` 引用有什么用呢?
+当你试图引用对象的属性时会触发`[[Get]]` 操作，比如 `myObject.a`。对于默认的 `[[Get]]` 操作来说，第一步是检查对象本身是否有这个属性，如果有的话就使用它。
+但是 如果 a 不在myObject 中，就需要使用对象的`[[Prototype]]`链了。
+对于默认的 `[[Get]]`操作来说，如果无法在对象本身找到需要的属性，就会继续访问对象的`[[Prototype]]`链:
+
+```js
+var anotherObject = {
+    a:2
+};
+//创建一个关联到anotherObject的对象
+var myObject = Object.create(anotherObject);
+myObject.a; //2
+```
+
+现在myObject对象的 `[[Prototype]]`关联到了 anotherObject。显然myObject.a并不存在，但是尽管如此，属性访问仍然成功地(在anotherObject中)找到了值2。
+但是，如果 anotherObject中也找不到 a并且`[[Prototype]]`链不为空的话，就会继续查找下去。
+这个过程会持续到找到匹配的属性名或者查找完整条`[[Prototype]]`链，如果是后者的话，`[[Get]]`操作的返回值是 `undefined`。
+使用 `for ...in`遍历对象时原理和查找`[[Prototype]]`链类似，任何可以通过原型链访问到(并且是 `enumerable`)的属性都会被枚举。使用 `in` 操作符来检查属性在对象中是否存在，同样会查找对象的整个原型链(无论属性是否可枚举)。
+
+#### 5.1.1 Object.prototype
+
+但是到哪里是`[[Prototype]]`的"尽头"呢 ?
+所有普通的`[[Prototype]]`链最终都会指向内置的`Object.prototype`。由于所有的"普通"(内置，不是特定主机的扩展) 对象都 "源于" (或者说把`[[Prototype]]`链的顶端设置为)这个`Object.prototype`对象，所以包含`JavaScript`中许多通用的功能。
+
+#### 5.1.2 属性设置和屏蔽
+
+第3章提到过，给一个对象设置属性并不是仅仅是添加一个新属性或者修改已有的属性值现在我们完整地讲解一下这个过程:
+`myObject.foo ="bar"`;
+如果 myObject 对象包含名为 foo 的普通数据访问属性，这条赋值语句只会修改已有的属性值。
+如果 foo不是直接存在于 myObject 中，`[[Prototype]]`链就会被遍历，类似`[[Get]]`操作。
+如果原型链上找不到 foo，foo 就会被直接添加到 myObject上。
+然而，如果foo存在于原型链上层，赋值语句`myObject.foo = "bar"`的行为就会有些不同(而且可能很出人意料)。
+如果属性名 foo 既出现在 myObject中也出现在 myObject 的`[[Prototype]]`链上层，那么就会发生屏蔽。myObject中包含的 foo属性会屏蔽原型链上层的所有foo属性，因为 myObject.foo 总是会选择原型链中最低的foo属性。
+屏蔽比我们想想中的更加复杂。下面我们分析一下如果foo不直接存在于myObject中而是存在于原型链上层时`myObject.foo="bar"`会出现三种情况。
+
+1. 如果在`[[Prototype]]`链上层存在名为`foo`的普通数据访问属性 并且没有别标记为只读(`writable:false`),那么就会直接在myObject中添加一个名为foo的新属性，它是`屏蔽属性`。
+
+2. 如果在`[[Prototype]]`链上层存在foo,但是它别标记为只读(`writable:false`),那么无法修改已有属性或者在myObject上创建`屏蔽属性`。如果运行在`严格模式`下，代码会抛出一个错误。否则，这条赋值语句就被忽略。总之，不会发生屏蔽。
+
+3. 如果在 `[[Prototype]]`链上层存在`foo`并且它是一个`setter`，那就一定会调用这个`setter`。foo不会被添加到(或者说屏蔽于)myObject，也不会重新定义foo这个 setter。
+
+大多数开发者都认为如果向`[[Prototype]]`链上层已经存在的属性(`[[Put]]`)赋值，就一定会触发屏蔽，但是如你所见，三种情况中只有一种(第一种)是这样的。
+如果你希望在第二种和第三种情况下也屏蔽foo,那就不同使用 = 操作符来赋值，而是使用 `Object.defineProperty(...)`来向myObject添加foo。
+
+注意 : 第二种情况可能是最令人以意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的foo看作是父类中的属性，它会被myObject继承(复制),这样一来 myObject 中的foo属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制。这看起来有点奇怪，myObject对象竟然会应为其他对象中有一个只读foo就不能包含foo属性。更奇怪的是，这个限制值存在于`=`赋值中，使用`Object.defineProperty(...)`并不会受影响。
+
+如果需要对屏蔽方法进行委托的话就不得不使用丑陋的显式伪多态。通常来说，使用屏蔽得不偿失，所以应尽量避免使用。第6章会介绍一种不适用屏蔽的更加简洁的设计模式。
+有些情况下会隐式产生屏蔽，一定要当心。思考下面的代码:
+
+```js
+var anotherObject = {
+    a:2
+};
+var myObject = Object.create(anotherObject);
+anoterObject.a; //2
+myObject.a;   //2
+anotherObject.hasOwnProperty("a") ;  //true
+myObject.hasOwnProperty("a");  //false
+myObject.a ++;  //隐式屏蔽!
+anotherObject.a;  //2
+myObject.a;  //3
+myObject.hasOwnProperty("a");  // true
+```
+
+尽管`myObject.a++`看起来应该(通过委托)查找并增加`anotherObject.a`属性，但是别忘了`++`操作相当于 `myObject.a = myObject.a +1`。因此`++`操作首先会通过 `[[Prototype]]`查找属性 `a` 并从 `anotherObject.a` 获取当前属性值2，然后给这个值加1，接着用 `[[Put]]`将值3赋值给`myObject`中新建的屏蔽属性`a`，天呐 !
+修改委托属性时一定小心。如果想染 `anotherObject.a` 的值增加，唯一的办法是 `anotherObject.a++`。
+
+### 5.2 "类"
+
+现在你可能会好奇: 为什么一个对象需要关联到另一个对象? 这样做有什么好处?这个问题非常好，但是在回答之前我们首先要理解`[[Prototype]]` "不是" 什么 。
+第 4章我们说过，JavaScript和面向类的语言不通，它并没有类来作为对象的抽象模式或者说蓝图。JavaScript中只有对象。
+实际上，JavaScript才是真正应该被称为"面向对象" 语言，因为它是少有的可以不通过类，直接创建对象的语言。
+在JavaScript中，类无法藐视对象的行为，(因为根本就不存在类!)对象直接定义自己的行为。在说一遍，JavaScript中只有对象。
+
+#### "类"函数
+
+多年依賴，JavaScript中有一种奇怪的行为一直在被无耻的滥用，那就是模仿类。
+这种奇怪的 "类似类"的行为利用函数的一种特殊特性:所有的函数默认都会拥有一个名为prototype的公有并且不可枚举的属性，它会指向另一个对象。
+在面向类的语言中，类可以被复制(或者说实例化)多次，就像用模具制作东西一样。我们在第4章看到过，之所以会这样式因为实例化(或者继承)一个类就意味着"把类的行为复制到物理对象中"，对于每一个新实例来说都会重复这个过程。
+但是在JavaScript中，并没有类似的复制机制。你不能创建一个类的多个实例，只能创建多个对象，它们`[[Prototype]]` 关联的是同一个对象。但是在默认情况下并不会进行复制，因此这些对象之间并不会完全失去联系，它们是相互关联的。
+最后我们得到了两个对象，它们之间互相关联，就是这样。我们并没有初始化一个类，实际上我们并没有从"类"中复制任何行为到一个对象中，只是让两个对象互相关联。
+如果你把JavaScript中对象的所有委托行为都归结到对象本身并且把对象看作是实物的话，那就(差不多)可以理解差异继承了。
+但是和原型继承一样，差异继承会更多的是你脑中构建出的模型，而非真实情况。它忽略了一个事实，那就是对象B实际上并不是被差异构造出来的，我们只是定义了B的一些指定特性，其他没有定义的东西都变成了"洞" 。而这些洞(或者说缺少定义的空白处)最终会被委托行为"填满"。
+默认情况下，对象不会想差异继承暗示的那样通过复制生成。因此，差异继承也不适合用来描述JavaScript的`[[Prototype]]`机制。
+当然如果你喜欢，完全可以使用差异继承这个术语，但是无论如何它只适用于你脑中的模型，并不符合引擎的真实行为。
+
+#### 5.2.2 "构造函数"
+
+安装JavaScript世界的惯例 ，"类"名首字母要大写
+这个管理影响力非常大，以至于如果你用new来调用小写方法或者不用new调用首字母大写的函数，许多JavaScript开发者都会责怪你。这很令人吃惊，我们竟然会如此女里地维护JavaScript(假)"面向类"的权利，尽管对于JavaScript引擎来说首字母大写没有任何意义。
+
+1. 构造函数还是调用
+    在JavaScript中对于"构造函数"最准确的解释是，所有带new的函数调用。
+
+#### 5.2.3 技术
+
+我们是不是已经介绍了JavaScript中所有和"类"相关的问题了呢?
+不是。JavaScript开发者绞尽脑汁想要模仿类的行为:
+
+```js
+function Foo(name){
+    this.name = name;
+}
+Foo.prototype.myName = function(){
+    return this.name;
+};
+var a = new Foo("a");
+var b = new Foo("b);
+a.myName();  // "a"
+b.myName();  //"b"
+```
+
+这段代码展示了另外两种 "面向类" 的技巧:
+
+1. `this.name = name` 给每个对象(也就是 a 和b ，参见第2章中的this绑定)都添加了 `.name`属性，有点像类实例封装的数据值。
+2. `Foo.prototype.myName = ...` 可能更有趣的技巧，它会给`Foo.prototype`对象添加一个属性(函数)。现在，`a.myName()` 可以正常工作，但是你可能会觉得很惊讶，这是什么原理呢?
+
+在这段代码中，看起来似乎创建 a 和b时会把`Foo.prototype`对象复制到这两个对象中，然而事实并不是这样。
+在本章开头介绍默认`[[Get]]`算法时我们介绍过 `[[Prototype]]`链，以及当属性不直接存在于对象中时如何通过它来进行查找。
+因此，在创建的过程中 ，a 和b的内部 `[[Prototype]]`都会关联到`Foo.prototype`上找到。
+
+#### 回顾"构造函数"
+
+之前讨论 `.constructor`属性时我们说过，看起来`.constructor === Foo`为真意味着a确实一个指向Foo的`.constructor`属性，但是事实不是这样的。
+这里一个很不幸的误解。实际上，`.constructor` 引用同样被委托了`Foo.prototype`,而 `Foo.prototype.constructor`默认指向Foo。
+把 `.constructor`属性指向Foo看作是 a 对象由 Foo "构造"非常容易理解，但这只不过是一种虚假的安全感。`a.constructor`只是通过默认的`[[Prototype]]`委托指向Foo ，这和 "构造毫无关系。相反，对于`.consructor`的误解理解很容易对你自己产生误导。
+举例来说，`Foo.prototype`的`.constructor`属性只是Foo函数在声明时的默认属性。如果你创建了一个新对象替换了函数默认的`.prototype`对象引用，那么新对象并不会自动获得`.constructor`属性。
+思考下面的代码:
+
+```js
+function Foo(){ /* ..*/}
+Foo.prototype = { /* ..*/}; //创建一个新原型对象
+var a1 = new Foo();
+a1.constructor ===Foo ; //false!
+a1.construcotr ===Object; //false
+```
+
+`Object(...)` 并没有 "构造" a1 ,对吧? 看起来应该是 Foo() "构造" 了它。大部分开发者都认为是 Foo() 执行了构造工作，但是问题在于，如果你认为"constructor"表示 "由 .....构造"的话，a1.constructor 应该是 Foo，但是它并不是 Foo！
+到底怎么回事?
+a1并没有 .constructor 属性，所有它会委托`[[Prototype]]`链上的`Foo.prototype`。但是这个对象也没有 `.constructor`属性(不过默认的`Foo.prototype`对象有这个属性!),所以它会继续委托，这次会委托给委托链顶端的`Object.Prototype`。这个对象有 `.constructor`属性。指向内置的`Object(...)`函数。
+当然，你可以给 `Foo.prototype`添加一个 `.constructor`属性，不过这需要手动添加一个符合正常行为的不可枚举(参见第3章)属性。
+举例来说:
+
+```js
+function Foo(){ /*..*/}
+Foo.prototype ={/* ..*/};  //创建一个新原型对象
+//需要在 Foo.prototype 上 "修复" 丢失的 .constructor属性
+//新对象属性起到 Foo.prototype 的作用
+// 关于 defineProperty(...), 参见第3章
+Object.defineProperty(Foo.prototype,"constructor",{
+    enumerable:false,
+    writable:true,
+    configurable:true,
+    value:Foo  // 让 .constructor 指向 Foo
+});
+```
+
+修复`.constructor`需要很多手动操作。所有这些工作都是源于把 "constructor" 错误地理解为 "由....构造"，这个误解的代价是在太高了。
+实际上，对象的 `.construcotr`会默认指向一个函数，这个函数可以通过对象的 `.prototype`引用。"constructor"和"prototype"这两个词本身的含义可能使用也可能不适用。最好的办法是记住这一点"constructor并不表示被构造"。
+`.constructor`并不是一个不可变属性。它是不可枚举(参见上面的代码)的，但是它的值是可写的(可以被修改)。此外，你可以给任意`[[Prototype]]`链中的任意对象添加一个名为 `constructor`的属性或者对其进行修改，你可以任意对其赋值。
+和`[[Get]]`算法查找`[[Prototype]]` 链的机制一样, `.constructor`属性引用的目标可能和你想的完全不同。
+结论 ?
+一些随意的对象属性引用，比如`a1.constructor`,实际上是不被信任的，它们不一定会指向默认的函数引用。此外很快沃恩就会看到，稍不留神`a1.construcotr`就可能会指向你意想不到的地方。
+`a1.constructor`是一个非常不可靠并且不安全的引用。通常来说要尽量避免使用这些引用。
+
+### 5.3 (原型) 继承
+
+我们已经看过了许多JavaScript程序中常用的模拟类行为的方法，但是如果没有"继承"机制的话，JavaScript中的类就只是一个空架子。
+经典的`原型风格` 就是下面这种:
+
+```js
+function Foo(name){
+    this.name = name;
+}
+Foo.prototype.myName = function(){
+    return this.name;
+};
+function Bar(name, label){
+    Foo.call(this, name);
+    this.label = label;
+}
+// 我们创建了一个新的 Bar.prototype 对象并关联到 Foo.prototype 
+Bar.prototype = Object.create(Foo.prototype) ;
+//注意! 现在没有 Bar.prototype.constructor 了
+//如果你需要这个属性的话 可能需要手动修复一下它
+Bar.prototype.myLable = function(){
+    return this.label;
+};
+var a = new Bar("a", "obj a");
+a.myName();  // "a"
+a.myLabel();   // "obj a"
+```
+
+这段代码的核心部分就是 语句`Bar.prototype = Object.create(Foo.prototype)` 。 调用 `Object.create(...)`会凭空创建一个 "新"对象并把新对象内部的`[[Prototype]]`关联到你指定的对象(本例中是 Foo.prototype) 。
+换句话说，这句话的意思是:"创建一个新的Bar.prototype对象并把它关联到Foo.prototype"。
+声明 `function Bar(){...}`时，和其他函数一样，Bar会有一个.prototype 关联到默认对象，但是这个对象并不是我们想要的Foo.prototype 。因此我们创建一了一个新对象并把它关联到我们希望的对象上，直接把原始的关联对象抛弃掉。
+注意 ，下面的这两种方式是常见的错误做法，实际上它们都存在一些问题:
+
+```js
+//和你想要的机制不一样!
+Bar.prototype = Foo.prototype;
+//基本上满足你的需求，但是可能会产生一些副作用:
+Bar.prototype = new Foo();
+```
+
+`Bar.prototype = Foo.prototype`并不会创建一个关联到`Bar.prototype`的新对象 ，它只是让`Bar.prototype`直接引用 Foo.prototype 对象。因此当你执行类似Bar.prototype.myLable = .... 的赋值语句时会直接修改Foo.prototype 对象本身。显然这不是你想要的结果，否则你根本不需要Bar对象，直接使用Foo就可以了，这样代码也会更简单一些。
+`Bar.prototype = new Foo()`的确会创建一个关联到Bar.prototype的新对象。但是它使用了Foo(...)的"构造函数调用" ，如果函数Foo有一些副作用(比如写日志、修改状态、注册到其他对象、给this添加数据属性，等等)的话，就会影响到Bar()的 "后代"，后果不堪设想。
+因此，要创建一个合适的关联对象，我们必须使用`Object.create(...)`而不是使用具有副作用的Foo(...)。这样做唯一的缺点就是需要创建一个新对象然后把旧对象抛弃掉，不能直接修改已有的默认对象。
+如果能有一个标准并且可靠的方法来修改对象的 `[[Prototype]]` 关联就好了。在ES6之前，我们只能通过设置`.__proto__`属性来实现，但是这个方法并不是标准并且无法兼容所有浏览器。ES6添加了辅助函数 `Object.setPrototypeOf(...)`,可以用标准并且可靠的方法来修改关联。
+我们来对比一下两种把 Bar.prototype关联到 Foo.prototype 的方法:
+
+```js
+//ES6之前需要抛弃默认的Bar.prototype
+Bar.prototype =Object.create(Foo.prototype);
+//ES6开始可以直接修改现有的Bar.prototype
+Object.setPrototypeOf(Bar.prototype, Foo.prototype);
+```
+
+如果忽略掉`Object.create(...)`方法带来的轻微性能损失(抛弃的对象需要进行垃圾回收)，实际上比ES6极其之后的方法更短而且可读性更高。不过无论如何，这是两种完全不同的语法。
+
+#### 检查"类"关系
+
+假设有对象a，如何寻找对象a委托的对象(如果存在的话)呢? 在传统的面向类环境中，检查一个实例(JavaScript中的对象) 的继承祖先(JavaScript中的委托关联)通常被称为内省(或者反射)。
+思考下面的代码:
+
+```js
+function Foo(){
+    //...
+}
+Foo.prototype.blah = ...;
+var a = new Foo();
+```
+
+我们如何通过内省找出a的"祖先" (委托关联)呢?第一种方法是站在 "类"的角度来判断:
+
+```js
+a instanceof Foo; // true
+```
+
+`instanceof`操作符的左操作数是一个普通对象，右操作数是一个函数。`instanceof`回答的问题是: 在 a的整条`[[Prototype]]`链中是否有指向`Foo.prototype`的对象？
+可惜，这个方法只能处理对象(a)和函数 (带.prototype 引用的Foo)之间的关系。如果想判断两个对象(比如a和b)之间是否通过`[[Prototype]]`链关联，只用`instanceof`无法实现。
+注意:如果使用内置的.bind(...)函数来生成一个硬绑定函数的话，改函数是没有 `.prototype`属性的。在这样的函数上使用`instanceof`的话，目标好书的`.prototype`会代替硬绑定函数的`.prototype`。
+通常我们不会在"构造函数调用"中使用硬绑定函数，不过如果你这么做的话，实际上相当于直接调用目标函数。同理，在硬绑定函数上使用instanceof也相当于直接在目标函数上使用instanceof。
+下面这段荒谬的代码试图站在"类"的角度使用instanceof 来判断两个对象的关系:
+
+```js
+//用来判断 o1是否关联到 (委托)o2的辅助函数
+function isRelatedTo(o1,o2){
+    function F(){}
+    F.prototype = o2;
+    return o1 instanceof F;
+}
+var a = {};
+var b = Object.create(a);
+isRelatedTo(b, a);  // true
+```
+
+在 isRelatedTo(..)内部我们声明了一个一次性函数F， 把它的`.prototype`重新赋值并指向对象o2,然后判断o1 是否是F的一个"实例"。显而易见，o1实际上并没有继承F也不是由F构造，所以这种方法非常愚蠢并且容易造成误解。问题的关键在于思考的角度，强行在JavaScript中应用类的语义(在本例中就是使用instanceof)就会造成这种尴尬的局面。
+下面是第二种判断`[[Prototype]`反射的方法，它更简洁:
+
+```js
+Foo.prototype.isPrototypeOf(a);   //true
+```
+
+注意，在本例中，我们实际上并不关心(甚至不需要)Foo, 我们只需要一个可以用来判断的对象(本例中是Foo.prototype )就行。isPrototypeOf(...)回答的问题是: 在a的在整条[[Prototype]]链中事否出现过Foo.prototype ?
+同样的问题，同样的答案，但是在第二种方法中并不需要简介引用函数(Foo),它的.prototype 属性会被自动访问。
+我们只需要两个对象就可以判断它们之间的关系。举例来说:
+
+```js
+//非常简单: b 是否出现在 c 的 [[Prototype]]链中?
+b.isPrototypeOf(c);
+```
+
+注意，这个 方法并不需要使用函数("类") ，它直接使用b和c之间的对象引用来判断它们的关系。换句话说，语言内置isPrototypeOf(...)链。在ES5中，标准的方法是:
+
+```js
+Object.getPrototypeOf(a);
+```
+
+可以验证一下，这个对象引用是否和我们想的一样:
+
+```js
+Object.getPrototypeOf(a) === Foo.prototype;  //true
+```
+
+绝大多数(不是所有!) 浏览器也支持一种非标准的方法来访问内部`[[Prototype]]`属性:
+`a.__proto__ === Foo.prototype ; //true`
+和我们之前说过的`.constructor`一样，`._proto__`实际上并不存在于你正在使用的对象中(本例中是a)。实际上，它和其他的常用函数(.toString(), .isPrototypeOf(...),等等)一样，存在于内置的`Object.prototype`中。(它们是不可枚举的)
+此外，`.__proto__`看起来像一个属性，但是实际上它更像一个 `getter/setter`。
+`.__proto__`的实现大致上是这样的:
+
+```js
+Object.defineProperty(Object.prototype, "__proto__",{
+    get:function(){
+        return Object.getPrototypeOf(this);
+    },
+    set:function(o){
+        //ES6中的 setPrototypeOf(...)
+        Object.setPrototypeOf(this, o);
+        return o;
+    }
+});
+```
+
+因此，访问(获取值) `a.__proto__`时，实际上是调用了`a.__proto__()`(调用`getter` 函数)。虽然 getter函数存在于`Object.prototype`对象中，但是它的this指向对象a，所以和 `Object.getPrototypeOf(a)` 结果相同。
+`.__proto__`是可设置属性，之前的代码中使用 ES6的`Object.setPrototypeOf(...)`进行设置。然而，通常说你不需要修改已有对象的`[[Prototype]]`。
+一些框架会使用非常复杂和高级的技术来实现"子类"机制，但是通常来说，我们不推荐这种用法，因为这会极大地增加代码的阅读难度和维护难度。
+我们只有在一些特殊情况下(我们前面讨论过) 需要设置函数默认.prototype 对象的`[[Prototype]]`,让它引用其他对象(除了Object.prototype)。这样可以避免使用全新的对象替换 默认对象。此外最好把`[[Prototype]]`对象关联看作是只读特性，从而增加代码的可读性。
+延伸:
+JavaScript社区对于双下划线有一个非官方的称呼，他们会把类似`__proto__`的属性称为"笨蛋(`dunder`)"。所以，JavaScript潮人会把`__proto__`叫做 "笨蛋proto"
+
+### 对象关联
+
+现在沃恩知道了，`[[Prototype]]`机制就是存在于对象中的一个内部链接，它会引用其他对象。
+通常来说，这个连接的作用是:如果在对象上没有找到需要的属性或者方法引用，引擎就会继续在`[[Prototype]]`关联的对象上进行查找。同理，如果在后者中也没有找到需要的引用就会继续查找它的`[[Prototype]]`，以此类推。这一系列对象的链接被称为"原型链"
+
+#### 5.4.1 创建关联
+
+我们已经明白了为什么JavaScript的`[[Prototype]]`机制和类不一样，也明白了它如何建立对象间的关联。那`[[Prototype]]`机制的意义是什么呢? 为什么JavaScript开发者费这么大力气(模拟类)在代码中创建这些关联呢?
+还记得吗，本章前面曾经说过`Object.create(...)`是一个大英雄,现在是时候来弄明白为什么了:
+
+```js
+var foo = {
+    something:function(){
+        console.log("Tell me something good...");
+    };
+    var bar = Object.create(foo);
+    bar.something();   //Tell me something good ....
+}
+```
+
+Object.create(...) 会创建一个新对象 (bar) 并把它关联到我们制定的对象(foo) ,这样我们就可以充分发挥`[[Prototype]]` 机制的威力(委托)并且避免不必要的麻烦(比如使用new的构造函数调用会生成.prototype 和.constructor引用)。
+
+扩展: `Object.create(null)` 会创建一个拥有空(或者说null)`[[Prototype]]`链接的对象，这个对象无法进行委托。由于这个对象没有原型链，所以instanceof操作符(之前解释过)无法进行判断，因此总是会返回false。这些特殊的空`[[Prototype]]`对象通常被称作为"字典"，它们完全不会受到原型链的干扰，因此非常适合用来存储数据。
+我们并不需要类来创建两个对象之间的关系，只需要通过委托来关联对象就足够了。而`Object.create(...)`不包含任何"类的诡计" ，所以它可以完美地创建想要的关联关系。
+`Object.create(...)`的`polyfill`代码
+Object.create(...)是在 ES5中新增的函数，所以在ES5之前的环境中(比如旧IE)如果要支持这个功能的话就需要使用一段简单的polyfill代码，它部分实现了`Object.create(...)`的功能:
+
+```js
+if(!Object.create){
+    Object.create = function(o){
+        function F() {}
+        F.prototype = o;
+        return new F();
+    }
+}
+```
+
+这段polyfill 代码使用了一个一次性函数F ，我们通过改写它的.prototype 属性使其指向想要关联的对象，然后使用 new F() 来创造一个新对象进行关联。
+由于 `Object.create(..c)` 可以被模拟，因此这个函数被应用的fico广泛。标准ES5中内置的`Object.create(...)`函数还提供了一系列附加功能，但是ES5之前的版本不支持这些功能。通常来说，这些功能的应用范围要小的多，但是出于完整性考虑，我们还是介绍一下：
+
+```js
+var anotherObject ={
+    a:2
+};
+var myObject = Object.create(anotherObject, {
+    b:{
+        enumerable:false,
+        writable:true,
+        configurable:false,
+        value:3
+    },
+    c:{
+        enumerable:true,
+        writable:false,
+        configurable:false,
+        value:4
+    }
+});
+myObject.hasOwnProperty("a");   //false
+myObject.hasOwnProperty("b");   //true
+myObject.hasOwnProperty("c");   //true
+myObject.a;  //2
+myObject.b; //3
+myObject.c;  //4
+```
+
+`Object.create(...)`的第二个参数指定了需要添加到新对象中属性名以及这些属性的属性。
+描述符。因为ES5之前的版本无法模拟属性操作符，所以polyfill diamante无法实现这个附加功能。
+通常来说并不会使用`Object.create(...)`的附加功能，所以对于大多数的开发者来说，上面那段polyfill代码就足够了。
+有些开发者更加严谨，我们认为只有能被完全模拟的函数才应该使用polyfill代码。由于`Object.create(...)`是只能部分模拟的函数之一，所以这些狭隘的人认为如果你需要在ES5之前的环境中使用`Object.create(..)`的特性，那不要使用polyfill代码，而是使用一个自定义函数并且名字不能是Object.create 。你可以把你自己的函数定义成这样:
+
+```js
+function createAndLinkObject(o){
+    function F(){}
+    F.prototype = o;
+    return new F();
+}
+var anotherObject = {
+    a:2
+};
+var myObject = createAndLinkObject(anotherObject);
+myObject.a;  // 2
+```
+
+我并不赞同这个严格的观点，相反，我很赞同在ES5中使用上面那段polyfill代码。如何选择取决于你。
+
+#### 5.4.2 关联关系是备用
+
+看起来对象之间的关联关系是处理"缺失"属性或者方法时的一种备用选项。这个说法有点道理，但是我认为这并不是`[[Prototype]]`的本质。
+思考下面的代码:
+
+```js
+var anotherObject = {
+    cool:function(){
+        console.log("cool!");
+    }
+};
+var myObject = Object.create(anotherObject);
+myObject.cool();  //"cool !"
+```
+
+由于存在`[[Prototype]]` 机制，这段代码可以正常工作。但是如果你这样写只是为了让myObject 在无法处理属性或者方法时可以使用备用的anotherObject, 那么你的软件就会变得有点"神奇"，而且很难理解和维护。
+这并不是说任何情况下都不应该选择备用这种设计模式，但是这在JavaScript中并不是很常见，所以如果你使用的是这种模式，那或许应当退后一步并重新思考一下这种模式是否合适。
+提示:
+在 ES6中有一个被称为"代理(Proxy)"的高端功能，它实现额就是"方法无法找到时"的行为。
+千万不要忽略这个微妙但是非常重要的区别。
+当你给开发者设计软件时，假设要调用myObject.cool() ，如果myObject中不存在cool()时这条语句也可以正常工作的话，那你的 API设计就会变得很"神奇" ，对于未来维护你软件的开发者来说这可能不太好理解。
+但是你可以让你的API设计不那么"神奇"，同时仍然能发挥`[[Prototype]]`关联的威力:
+
+```js
+var anotherObject = {
+    cool:function(){
+        console.log("cool!");
+    }
+};
+var myObject = Object.create(anotherObject);
+myObject.doCool = function(){
+    this.cool();  //内部委托
+};
+myObject.doCool();   // "Cool!"
+```
+
+这里我们调用 myObject.doCool() 是实际存在于myObject 中的，这可以让我们的API设计更加清晰(不那么神奇)。从内部来说，我们的实现遵循的是委托设计模式,通过`[[Prototype]]` 委托到`anotherObject.cool()` 。
+换句话说，内部委托比起直接委托可以让API接口设计更加清晰。下一章我们会详细解释委托。
+
+### 5.5 小结
+
+如果要访问对象中并不存在的一个属性，`[[Get]]`操作就会查找对象内部`[[Prototype]]`关联关系实际上定义了一条"原型链"(有点像嵌套的作用域链)，在查找属性时会对它进行遍历。
+所有普通对象都有内置的`Object.prototype`，指向原型链的顶端(比如说全局作用域)，如果在原型链中找不到指定的属性就会停止。toString()、valueOf()和其他一些通用的功能都存在于Object.prototype 对象上，因此语言中所有的对象都可以使用它们。
+关联两个对象最常用的方法是使用new关键词进行函数调用，在调用的4个步骤(第二章)中会创建一个关联其他对象的新对象。
+使用new调用函数时会把新对象的.prototype 属性关联到 "其他对象"。带new的函数调用通常被称为"构造函数调用" ，尽管它们实际上和传统面向类语言中的类构造函数不一样。
+虽然这些JavaScript机制和传统面向类语言中的"类初始化" 和"类继承"很相似但是JavaScript中的机制有一个核心区别，那就是不会进行复制，对象之间是通过内部的 `[[Prototype]]`链关联的。
+出于各种原因，以"继承"结尾的术语，因为对象之间的关系不是复制而是委托。
