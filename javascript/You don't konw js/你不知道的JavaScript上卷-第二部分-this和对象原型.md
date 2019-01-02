@@ -567,7 +567,7 @@ Object.defineProperty(myObject, Symbol.iterator,{
         };
     }
 });
-//手动遍历 myObject 
+//手动遍历 myObject
 var  it = myObject[Symbol.iterator]();
 it.next();// {value:2, done:false}
 it.next();// {value:3, done:false}
@@ -600,7 +600,7 @@ for(var n of randoms){
 }
 ```
 
-这个迭代器会生成"无限个"随机数，因此我们添加了一条bread语句，防止程序被挂起。
+这个迭代器会生成"`无限个`"随机数，因此我们添加了一条`break`语句，防止程序被挂起。
 
 ### 3.5 小结
 
@@ -627,7 +627,7 @@ JavaScript中的对象有字面形式(比如 `var a={...}`)和构造形式(比�
 
 #### 4.1.2 JavaScript中的 "类"
 
-JavaScript属于哪一种类呢? 在相当长的一段时间里，JavaScript只有一些近似类的语法元素(比如 new 和instanceof)，不过在后来的 ES6中新增了一些元素，比如class关键字。
+JavaScript属于哪一种类呢? 在相当长的一段时间里，`JavaScript`只有一些近似类的语法元素(比如 new 和instanceof)，不过在后来的 ES6中新增了一些元素，比如class关键字。
 这是不是意味着 JavaScript中实际上有类呢? 简单来说 :不是。
 由于类是一种设计模式，所以你可以用一些方法(本章之后会介绍)近似实现类的功能。
 为了满足对于类设计模式的最普遍需求，JavaScript提供了一些近似类的语法。
@@ -665,8 +665,8 @@ JavaScript要简单的多:它本身并不提供"多重继承"功能。许多人�
 
 ### 4.4 混入
 
-在继承或者实例化时，JavaScript的对象机制并不会自动执行复制行为。简单的来说JavaScript中只有队形，并不存在可以被实例化的 "类" 。一个对象并不会被复制到其他对象，它们会被关联起来。
-由于在其他语言中类表现出来的都是赋值行为，因此JavaScript开发者也想了一个方法来模拟类的复制行为，这个方法就是`混入`。接下来我们会看到两种类型的混入:`显示`和`隐式`。
+在继承或者实例化时，`JavaScript`的对象机制并不会自动执行复制行为。简单的来说`JavaScript`中只有队形，并不存在可以被实例化的 "类" 。一个对象并不会被复制到其他对象，它们会被关联起来。
+由于在其他语言中类表现出来的都是赋值行为，因此`JavaScript`开发者也想了一个方法来模拟类的复制行为，这个方法就是`混入`。接下来我们会看到两种类型的混入:`显示`和`隐式`。
 
 #### 4.4.1 显式混入
 
@@ -844,7 +844,7 @@ myObject.a; //2
 
 2. 如果在`[[Prototype]]`链上层存在foo,但是它别标记为只读(`writable:false`),那么无法修改已有属性或者在myObject上创建`屏蔽属性`。如果运行在`严格模式`下，代码会抛出一个错误。否则，这条赋值语句就被忽略。总之，不会发生屏蔽。
 
-3. 如果在 `[[Prototype]]`链上层存在`foo`并且它是一个`setter`，那就一定会调用这个`setter`。foo不会被添加到(或者说屏蔽于)myObject，也不会重新定义foo这个 setter。
+3. 如果在 `[[Prototype]]`链上层存在`foo`并且它是一个`setter`，那就一定会调用这个`setter`。`foo`不会被添加到(或者说屏蔽于)`myObject`，也不会重新定义`foo`这个 `setter`。
 
 大多数开发者都认为如果向`[[Prototype]]`链上层已经存在的属性(`[[Put]]`)赋值，就一定会触发屏蔽，但是如你所见，三种情况中只有一种(第一种)是这样的。
 如果你希望在第二种和第三种情况下也屏蔽foo,那就不同使用 = 操作符来赋值，而是使用 `Object.defineProperty(...)`来向myObject添加foo。
@@ -986,7 +986,7 @@ function Bar(name, label){
     Foo.call(this, name);
     this.label = label;
 }
-// 我们创建了一个新的 Bar.prototype 对象并关联到 Foo.prototype 
+// 我们创建了一个新的 Bar.prototype 对象并关联到 Foo.prototype
 Bar.prototype = Object.create(Foo.prototype) ;
 //注意! 现在没有 Bar.prototype.constructor 了
 //如果你需要这个属性的话 可能需要手动修复一下它
@@ -1249,3 +1249,192 @@ myObject.doCool();   // "Cool!"
 使用new调用函数时会把新对象的.prototype 属性关联到 "其他对象"。带new的函数调用通常被称为"构造函数调用" ，尽管它们实际上和传统面向类语言中的类构造函数不一样。
 虽然这些JavaScript机制和传统面向类语言中的"类初始化" 和"类继承"很相似但是JavaScript中的机制有一个核心区别，那就是不会进行复制，对象之间是通过内部的 `[[Prototype]]`链关联的。
 出于各种原因，以"继承"结尾的术语，因为对象之间的关系不是复制而是委托。
+
+## 6 行为委托
+
+回顾一下第5章的结论:`[[Prototype]]`机制就是指对象中的一个内部链接引用另一个对象。
+如果在第一个对象上没有找到需要的属性或者方法引用，引擎就会继续在`[[Prototype]]`关联的对象上进行查找。同理，如果在后者中也没有找到需要的引用就会继续查找它的`[[Prototype]]`,以此类推。这一系列对象的连接被称为"原型链"。
+换句话说，JavaScript中的这个机制的本质就是对象之间的关联关系。
+
+### 6.1 面向委托的设计
+
+为了更好地学习如何更直观地使用`[[Prototype]]`,我们必须认识到它代表的是一种不同于类的设计模式。
+注意:面向类的设计中有些原则依然有效，因此不要把所有的只是都抛掉。(只需要抛掉大部分就够了!)举例来说，封装是非常有用的，它同样可以应用在委托中(虽然不太常见)。
+我们需要试着把思路从类和继续的设计模式转换到委托行为的设计模式。如果你在学习或者工作的过程中几乎一直在使用类，那转换思路可能不太自然并且不太舒服。你可能需要多重复几次才能熟悉这种思维模式。
+
+### 6.1.1 类理论
+
+假设我们需要在软件中建模一些类似的任务("XYZ", "ABC" 等)。
+如果使用类，那设计方法可能是这样的:定义一个通用父(基类)，可以将其命名为Task,在Task类中定义所有认为都有的行为。接着定义子类XYZ, ABC, 它们都继承自Task并且会添加一些特殊的行为来处理对应的任务。
+非常重要的是，类设计模式鼓励你在继承时使用方法重写(和多态)，比如说在XYZ任务中重写Task中定义的一些通用方法，甚至在添加新行为时通过super调用这个方法的原始版本。你会发现许多行为可以先"抽象"到父类然后在用子类 进行特殊化(重写)。
+下面是对应的伪代码:
+
+```js
+class Task{
+    id;
+    //构造函数Task()
+    Task(ID){id=ID;}
+    outputTask(){output(id); }
+}
+class XYZ inherits Task{
+ label;
+ //构造函数XYZ()
+ XYZ(ID,Label) {super(ID); Label =Label;}
+ outputTask(){super(); output(label)}
+}
+class ABC inherits Task{
+    // ...
+}
+```
+
+现在你可以实例化子类XYZ的一些副本然后使用这些实例来执行任务 "XYZ"。这些实例会复制Task定义的通用行为以及XYZ定义的特殊行为。同理，ABC类的实例也会复制Task的行为和ABC的行为。在构造完成后，你通常只需要操作这些实例(而不是类)，因为每个实例都有你需要完成任务的所有行为。
+
+#### 6.1.2 委托理论
+
+但是现在我们试着来使用委托行为而不是类来思考同样的问题。
+首先你会定义一个名为`Task`的对象(和许多`JavaScript`开发者告诉你的不同，它既不是`类`也不是`函数`)，它会包含所有任务都可以使用(写作使用，读作委托)的具体行为。接着，对于每个任务("`XYZ`", "`ABC`")你都会定义一个对象来存储对应的数据和行为。你会把特定的任务对象都关联到Task功能对象上，让它们在需要的时候可以进行委托。
+基本上你可以想象成，执行任务"XYZ" 需要把两个兄弟对象(XYZ和Task)协作完成。但是我们并不需要把这些行为放在一起，通过类的复制，我们可以把它们分别放在各自独立的对象中，需要时可以运行XYZ对象委托给Task。
+下面是推荐的代码行为，非常简单:
+
+```js
+Task = {
+    setID:function(ID){this.id = ID;} ,
+    outputID:function() {console.log(this.id);}
+};
+// 让XYZ委托 Task
+XYZ = Object.create(Task);
+XYZ.prepareTask = function(ID,Label){
+    this.setID(ID);
+    this.label = Label;
+};
+XYZ.outputTaskDetails = function (){
+    this.outputID();
+    console.log(this.label);
+}
+//ABC = Object.create(Task);
+//ABC .... =  ....
+```
+
+在这段代码中，Task和XYZ 并不是类(或者函数)，它们是对象。XYZ通过 Object.create(...)创建，它的`[[Prototpye]]`委托了Task对象。
+相比于面向类(或者说面向对象)，我会把这种编码风格称为"`对象关联`"(OLOO,objects linked to other objects)。我们真正关心的只是XYZ对象(和ABC对象)委托了Task对象。
+在JavaScript中，`[[Prototype]]`机制会把对象关联到其他对象。无论你多么努力地说服自己，JavaScript中就是没有类似"类"的抽象机制。这有点像逆流而上:你确实可以这么做，但是如果你选择对抗事实，那要达到目的就显然会更加困难。
+对象关联风格的diamante还有一些不同之处。
+
+1. 在上面的代码中，id和label数据成员都是直接存储在XYZ上(而不是Task)。通常来说，在`[[Prototype]]`委托中最好把状态保存在委托者(XYZ,ABC)而不是委托目标(Task)上。
+2. 在类设计模式中，我们故意让父类(Task)和子类(XYZ)中都有outputTask方法，这样就可以利用重写(多态)的优势。在委托行为中则恰好相反:我们会尽量避免在`[[Prototype]]`链的不同级别由使用相同命名。否则就需要使用笨拙并且脆弱的语法来消除引用歧义。这个设计模式要求尽量少使用容易被重写的通用方法名，提倡使用更有描述性的方法名，尤其是要写清相应对象行为的类型。这样做实际上可以创建出更容易理解和维护的代码，因为方法名(不仅在定义的位置，而是贯穿整个代码)更加清晰。
+3. this.setID(ID); XYZ 中的方法首先会寻找XYZ自身是否有setID(...)，但是XYZ中并没有这个方法名。此外，由于调用位置触发了this的隐式绑定规则，因此虽然setID(...)方法在Task中，运行时this仍然会绑定到XYZ，这正是我们想要的。在之后的代码中我们还会看到this.outputID(),原理相同。
+
+换句话说，我们和XYZ进行交互时可以使用Task中的通用方法，因为XYZ委托了Task。
+`委托行为`意味着某些对象(XYZ)在找不到属性或者方法引用时会把这个请求委托给另一个对象(Task)。
+这是一种极其强大的设计模式，和父类、子类、继承、多态等概念完全不同。在你的脑海中对象并不是按照父类到子类的关系垂直组织的，而不是通过任意方向的委托关联并排组织的。
+注意: 在API接口的设计中，委托最好在内部实现，不要直接暴露出去。在之前的例子中我们并没有让开发者通过API直接调用XYZ.setID().(当然，可以这么做!)相反，我们把委托隐藏在了API的内部，XYZ.prepareTask(..)会委托Task.setID(...)。
+
+1. 互相委托(禁止)
+    你无法在两个或两个以上互相(双向)委托对象之间创建循环委托。如果你把B关联到A然后试着把A关联到B，就会出错。
+    很遗憾(并不是非常出乎意料，但是有点烦人)这种方法是被禁止的。如果你引用了一个两边不存在的属性或者方法，那就会在`[[Prototype]]`链上产生一个无线递归的循环。但是如果所有的引用都被严格限制的话，B是可以委托A的，反之亦然。因此，互相委托理论上是可以正常工作的，在某些情况下这是非常有用的。
+    之所有要禁止互相委托，是因为引擎的开发者们发现在设置时检查(并禁止!)一次无限循环引用要更加高效，否则每次从对象中查找属性时都需要进行检查。
+2. 调试
+    我们来简单介绍一个容易让开发者感到迷惑的细节。通常来说，JavaScript规范并不会控制浏览器中开发者工具对于特定值或者结构的表示方式，浏览器和引擎可以自己选择合适的方式来进行解析，因此浏览器和工具的解析结果并不一定相同。比如，下面这段代码的结果只能在chrome的开发者工具中才能看到。
+    这段传统的 "类构造函数"JavaScript代码在Chrome开发者工具的控制台中结果如下所示:
+
+    ```js
+    function Foo(){}
+    var a1 = new Foo();
+    a1; //Foo{}
+    ```
+    我们看到代码的最后一行:表达式a1的输出是Foo{}。如果你在Firefox中运行同样的代码会得到Object{}.为什么会这样呢?这些输出是什么意思呢?
+    chrome实际上想说的是"{}是一个空对象,由名为Foo的函数构造"。Firefox想说的是"{}是一个空对象，由Object构造"。之所以有这种细微的差别，是因为chrome会动态跟踪并把实际执行构造过程的函数名当作一个内置属性，但是其他浏览器并不会跟踪这些额外的信息。
+    看起来可以用JavaScript的机制来解释chrome的跟踪原理:
+    ```js
+    function Foo(){}
+    var a1 =new Foo();
+    a1.constructor ; // Foo(){}
+    a1.constructor.name; //"Foo"
+    ```
+
+    Chrome是不是直接输出了对象的`.constructor.name` 呢?令人迷惑的是，答案是"既是又不是"。
+    思考下面的代码:
+
+    ```js
+    function Foo(){}
+    var a1 = new Foo();
+    Foo.prototype.constructor = function Gotcha(){};
+    a1.constructor ; // Gotcha(){}
+    a1.constructor.name; // "Gotcha"
+    a1; //Foo{}
+    ```
+
+    即使我们把`a1.constructor.anem`修改为另一个合理的值(Gotcha),chrome控制台仍然会输出Foo。
+    看起来之前那个为题(是否使用`.constructor.name`?)的答案是 "不是";Chrome在内肯定是服务另一种方式进行跟踪。
+    别着急!我们先看看下面这段代码:
+
+    ```js
+    var Foo = {};
+    var a1 = Object.create(Foo);
+    a1; // Object{}
+    Object.defineProperty(Foo, "constructor",{
+        enumerable:false,
+        value:function Gotcha()
+    });
+    a1; //Gotcha{}
+    ```
+
+    啊哈!抓到你了(Gotcha的意思就是抓到你了)!本例中chrome的控制台确实使用了`.constructor.name`。实际上，在编写本书时，这个行为被认定是chrome的一个bug，当你读到此书时，它可能已经被修复了。所以你看到的可能a1; //Object{}。
+    除了这个bug,chrome内部跟踪(只用于调试输出) "构造函数名称"的方法是chrome自身的一种扩展行为，并不包含在JavaScript的规范中。
+    如果你并不是使用"构造函数"来生成对象，比如使用本章介绍的对象关联风格来编写代码，那chrome就无法跟踪对象内部的"构造函数名称"，这样的对象输出是Object {} , 意思是 "Object()构造出的对象"。
+    当然，这并不是对象关联风格diamante的缺点。当年使用对象关联风格编写带啊并使用行为委托设计模式时，并不需要关注是谁"构造了"对象(就是使用new调用的那个函数)。只有使用类风格来编写代码时 chrome内部到的 "构造函数名称"跟踪才有意义，使用对象关联时这个功能不起任何作用。
+
+#### 6.1.3 比较思维模型
+
+现在你已经明白了"类"和"委托"这两种设计模式的理论区别，接下来我们看看它们在思维模型方面的区别。
+我们会通过一些示例(Foo,Bar)代码来比较一下两种设计模式(面向对象和对象关联)具体的实现方法。下面是典型("原型")面向对象风格:
+
+```js
+function Foo(who){
+    this.me = who;
+}
+Foo.prototype.identify = function(){
+    return "I am " + this.me ;
+};
+function Bar(who){
+    Foo.call(this, who);
+}
+Bar.prototype = Object.create(Foo.prototype);
+Bar.prototype.speak = function(){
+    alert("Hello, " + this.identify() + ".");
+};
+var b1 = new Bar("b1");
+var b2 = new Bar("b2");
+b1.speak();
+b2.speak();
+```
+
+子类Bar继承了父类 Foo ，然后生成了b1和b2两个实例。b1委托了`Bar.prototype`,后者委托了Foo.prototype .这种风格很常见，你应该很熟悉了。
+下面我们看看如何使用对象关联风格来编写功能完全相同的代码:
+
+```js
+Foo = {
+    init:function(who){
+        this.me = who;
+    },
+    identify:function(){
+        return "I am" + this.me;
+    }
+}
+Bar = Object.create(Foo);
+Bar.speak = function(){
+    alert("Hello, "+ this.identify() + ".");
+};
+var b1 = Object.create(Bar);
+b1.init("b1");
+var b2 = Object.create(Bar);
+b2.init("b2");
+b1.speak();
+b2.speak();
+```
+
+这段代码找那个我们同样利用`[[Prototype]]`把b1委托给Bar并把Bar委托个Foo，和上一段代码一模一样。我们仍然实现了三个对象之间的关联。
+但是非常重要的一点是，这段代码简洁了许多，我们只是把对象关联起来，并不需要那些既复杂又令人困惑的模仿类的行为(构造函数、原型以及new)。
+问问你自己:如果对象关联风格的代码能够实现类风格代码的所有功能并且更加简洁易懂，那它是不是比类风格更好?
+下面我们看看两段代码对应的思维模型。
+首先，类风格代码思维模型强调实体以及实体间的关系:
